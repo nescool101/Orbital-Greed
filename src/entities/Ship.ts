@@ -1,8 +1,11 @@
 import Phaser from 'phaser';
+import { SHIP, BULLET } from '../config/constants';
+import { Bullet } from './Bullet';
 
 export class Ship extends Phaser.GameObjects.Container {
   shipBody: Phaser.GameObjects.Triangle;
-  isMoving: boolean = false;
+  declare body: Phaser.Physics.Arcade.Body;
+  private lastShotTime: number = 0;
 
   constructor(scene: Phaser.Scene, x: number, y: number) {
     super(scene, x, y);
@@ -12,26 +15,50 @@ export class Ship extends Phaser.GameObjects.Container {
 
     this.add([this.shipBody]);
     scene.add.existing(this);
+
+    // Enable physics on this container
+    scene.physics.world.enable(this);
+    this.body.setCircle(SHIP.BODY_RADIUS, -SHIP.BODY_RADIUS, -SHIP.BODY_RADIUS);
+    this.body.setDrag(SHIP.DRAG, SHIP.DRAG);
+    this.body.setMaxSpeed(SHIP.MAX_SPEED);
+    this.body.setCollideWorldBounds(true);
   }
 
-  travelTo(x: number, y: number, duration: number): Promise<void> {
-    return new Promise((resolve) => {
-      this.isMoving = true;
+  handleMovement(
+    up: boolean,
+    down: boolean,
+    left: boolean,
+    right: boolean
+  ): void {
+    let ax = 0;
+    let ay = 0;
 
-      const angle = Phaser.Math.Angle.Between(this.x, this.y, x, y);
+    if (up) ay -= SHIP.ACCELERATION;
+    if (down) ay += SHIP.ACCELERATION;
+    if (left) ax -= SHIP.ACCELERATION;
+    if (right) ax += SHIP.ACCELERATION;
+
+    this.body.setAcceleration(ax, ay);
+
+    // Rotate ship to face movement direction
+    if (ax !== 0 || ay !== 0) {
+      const angle = Math.atan2(ay, ax);
       this.shipBody.setRotation(angle + Math.PI / 2);
+    }
+  }
 
-      this.scene.tweens.add({
-        targets: this,
-        x,
-        y,
-        duration,
-        ease: 'Sine.easeInOut',
-        onComplete: () => {
-          this.isMoving = false;
-          resolve();
-        },
-      });
-    });
+  isMoving(): boolean {
+    const speed = this.body.speed;
+    return speed > 10;
+  }
+
+  shoot(time: number, bullets: Phaser.Physics.Arcade.Group): Bullet | null {
+    if (time - this.lastShotTime < SHIP.SHOOT_COOLDOWN) return null;
+    this.lastShotTime = time;
+
+    const angle = this.shipBody.rotation - Math.PI / 2;
+    const bullet = new Bullet(this.scene, this.x, this.y, angle);
+    bullets.add(bullet);
+    return bullet;
   }
 }

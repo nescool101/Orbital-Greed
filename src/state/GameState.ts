@@ -1,3 +1,5 @@
+import { WORLD } from '../config/constants';
+
 export interface PlanetData {
   id: number;
   x: number;
@@ -18,6 +20,10 @@ export class GameState {
   fuel: number = 100;
   maxFuel: number = 100;
   credits: number = 0;
+
+  // Ship position (persisted between scenes)
+  lastShipX: number = WORLD.CENTER_X;
+  lastShipY: number = WORLD.CENTER_Y;
 
   // Progress
   currentPlanet: PlanetData | null = null;
@@ -48,6 +54,8 @@ export class GameState {
     this.fuel = 100;
     this.maxFuel = 100;
     this.credits = 0;
+    this.lastShipX = WORLD.CENTER_X;
+    this.lastShipY = WORLD.CENTER_Y;
     this.currentPlanet = null;
     this.planetsVisited = 0;
     this.totalEarned = 0;

@@ -10,6 +10,8 @@ export class SaveManager {
       fuel: state.fuel,
       maxFuel: state.maxFuel,
       credits: state.credits,
+      lastShipX: state.lastShipX,
+      lastShipY: state.lastShipY,
       armorLevel: state.armorLevel,
       engineLevel: state.engineLevel,
       shieldLevel: state.shieldLevel,

@@ -6,6 +6,7 @@ export class Planet extends Phaser.GameObjects.Container {
   circle: Phaser.GameObjects.Arc;
   label: Phaser.GameObjects.Text;
   riskLabel: Phaser.GameObjects.Text;
+  lastFiredTime: number = 0;
 
   constructor(scene: Phaser.Scene, planetData: PlanetData) {
     super(scene, planetData.x, planetData.y);

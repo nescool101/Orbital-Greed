@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { PLANETS, ECONOMY } from '../config/constants';
+import { PLANETS, ECONOMY, WORLD, SUN } from '../config/constants';
 import { PlanetData } from '../state/GameState';
 
 export class PlanetGenerator {
@@ -14,13 +14,20 @@ export class PlanetGenerator {
       let attempts = 0;
 
       do {
-        x = Phaser.Math.Between(100, 700);
-        y = Phaser.Math.Between(100, 500);
+        x = Phaser.Math.Between(150, WORLD.WIDTH - 150);
+        y = Phaser.Math.Between(150, WORLD.HEIGHT - 150);
         attempts++;
       } while (
-        usedPositions.some(
-          (p) => Phaser.Math.Distance.Between(p.x, p.y, x, y) < 120
-        ) &&
+        (usedPositions.some(
+          (p) => Phaser.Math.Distance.Between(p.x, p.y, x, y) < 160
+        ) ||
+          // Keep planets away from the sun center
+          Phaser.Math.Distance.Between(
+            WORLD.CENTER_X,
+            WORLD.CENTER_Y,
+            x,
+            y
+          ) < SUN.RADIUS + 100) &&
         attempts < 100
       );
 

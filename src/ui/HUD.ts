@@ -25,24 +25,29 @@ export class HUD {
     // Health
     this.scene.add
       .text(10, 10, 'HP', { fontSize: '12px', color: '#ff4444' })
+      .setScrollFactor(0)
       .setDepth(100);
-    this.healthBar = this.scene.add.graphics().setDepth(100);
+    this.healthBar = this.scene.add.graphics().setScrollFactor(0).setDepth(100);
     this.healthText = this.scene.add
       .text(140, 10, '', { fontSize: '12px', color: '#ffffff' })
+      .setScrollFactor(0)
       .setDepth(100);
 
     // Fuel
     this.scene.add
       .text(10, 30, 'FUEL', { fontSize: '12px', color: '#4488ff' })
+      .setScrollFactor(0)
       .setDepth(100);
-    this.fuelBar = this.scene.add.graphics().setDepth(100);
+    this.fuelBar = this.scene.add.graphics().setScrollFactor(0).setDepth(100);
     this.fuelText = this.scene.add
       .text(140, 30, '', { fontSize: '12px', color: '#ffffff' })
+      .setScrollFactor(0)
       .setDepth(100);
 
     // Credits
     this.creditsText = this.scene.add
       .text(10, 55, '', { fontSize: '14px', color: '#ffdd00' })
+      .setScrollFactor(0)
       .setDepth(100);
   }
 
